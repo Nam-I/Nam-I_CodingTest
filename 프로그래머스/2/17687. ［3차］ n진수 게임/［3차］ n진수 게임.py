@@ -1,21 +1,21 @@
-big = ["A","B","C","D","E","F"]
+def convert(number, n):
+    if number == 0:
+        return '0'
+    NUMBERS = "0123456789ABCDEF"
+    res = ""
+    while number > 0:
+        number, mod = divmod(number, n)
+        res += NUMBERS[mod]
+    return res[::-1]
+
 def solution(n, t, m, p):
-    a="0"
-    i=0
-    #for i in range(t*m):
-    while True:
-        if len(a)>=t*m:
+    answer = ''
+    game = '0'
+    for num in range(1, t * m+1):
+        game += convert(num, n)
+    while 1:
+        if len(answer) == t:
             break
-        b=""
-        j=i
-        while (j):
-            if j%n>9:
-                b=big[j%n-10]+b
-            else:
-                b=str(j%n)+b
-            j=j//n
-        a=a+b
-        i=i+1
-    answer = a[p-1::m][:t] #나온 리스트에서 인원수 p의 차례 대답에 해당하는 인덱스부터
-    #인원 수 단위로 자르고, 다시 구하고자 하는 숫자의 개수만큼 자른다.
+        answer += game[p-1]
+        p += m
     return answer
