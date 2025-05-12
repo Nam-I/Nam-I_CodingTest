@@ -23,13 +23,13 @@ tmp = arr[start] + arr[end]
 
 while start < end:
 
-    if tmp == 0:
-        sys.stdout.write(f"{arr[start]} {arr[end]}")
-        exit(0)
-
-    if abs(0 - mix) > abs(0 - tmp):
+    if abs(mix) > abs(tmp):
         mix = tmp
         answer = [arr[start], arr[end]]
+
+        if tmp == 0:
+            sys.stdout.write(f"{arr[start]} {arr[end]}")
+            exit(0)
 
     if tmp < 0:
         start += 1
