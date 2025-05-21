@@ -10,7 +10,6 @@
 """
 
 import heapq as hq
-# import time
 
 
 def solution(n, costs):
