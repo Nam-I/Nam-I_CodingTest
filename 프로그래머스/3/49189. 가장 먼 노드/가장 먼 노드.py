@@ -14,25 +14,26 @@ from collections import deque
 
 
 def solution(n, vertex):
-    graph = [[] for i in range(n + 1)]
-    edge = [-1] * (n + 1)
+    graph = [[] for i in range(n + 1)] 
+    edge = [-1] * (n + 1)  # 방문 여부 확인과 지나온 간선 수를 기록
 
     for start, end in vertex:
         graph[start].append(end)
         graph[end].append(start)
 
     def bfs():
-        queue = deque([1])
-        edge[1] = 0
+        queue = deque([1])  # 루트 노드에서 시작
+        edge[1] = 0  # 시작 노드의 간선 수 0
 
         while queue:
             now = queue.popleft()
 
-            for node in graph[now]:
-                if edge[node] == -1:
-                    queue.append(node)
-                    edge[node] = edge[now] + 1
+            for node in graph[now]:  # 현재 노드와 연결되 노드 확인
+                if edge[node] == -1:  # 연결된 노드가 방문하지 않은 노드인지 확인
+                    queue.append(node)  # 이동 가능한 노드이면 큐에 넣는다.
+                    edge[node] = edge[now] + 1  # 현재 노드에서 이동 가능한 노드로 이동하면
+                    # 간선을 하나 지나온 것이므로 현재 노드에 오기까지 지나온 간선 개수 + 1
 
-        return edge.count(max(edge))
+        return edge.count(max(edge))  # 가장 큰 간선 수에 해당하는 수를 edge 리스트에서 세어서 반환.
 
     return bfs()
