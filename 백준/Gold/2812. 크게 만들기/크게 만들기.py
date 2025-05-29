@@ -23,6 +23,6 @@ for num in S:
     stack.append(num)
 
 if K > 0:
-    print(''.join(stack[:-K]))
+    sys.stdout.write(''.join(stack[:-K]))
 else:
-    print(''.join(stack))
+    sys.stdout.write(''.join(stack))
