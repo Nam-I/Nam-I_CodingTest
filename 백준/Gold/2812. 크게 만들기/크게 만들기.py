@@ -7,9 +7,10 @@
 # 핵심 내용
 - 그냥 접근을 살짝 잘못한거 같음. 중요한 점 딱히 없음. 누군가는 엄청 쉽게 풀었을 문제
 """
+
 import sys
 
-N, K = map(int, sys.stdin.readline().split())
+K = int(sys.stdin.readline().split()[-1])
 
 S = sys.stdin.readline().strip()
 
