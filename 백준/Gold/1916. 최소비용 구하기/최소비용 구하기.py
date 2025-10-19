@@ -2,7 +2,7 @@ import heapq  # 우선순위 큐 구현을 위함
 import sys
 input = sys.stdin.readline
 
-# 입력 1016
+# 입력 1019
 N = int(input())  # node 개수
 M = int(input())  # edge 개수
 graph = [[] for _ in range(N+1)]
@@ -36,6 +36,7 @@ def dijkstra(graph, start):
 dist_start = dijkstra(graph, start)
 
 print(dist_start[end])
+
 
 
 
