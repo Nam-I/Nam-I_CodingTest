@@ -1,55 +1,87 @@
-import java.io.*;
+/** 백준 18352.S2.특정거리의 도시 찾기 - java 풀이 **/
+/**
+ * ## 체감 난이도 ##
+ * - 접근은 할 수 있으나 완벽히 풀기엔 아직 부족한 실력 (dfs 문제인 줄 알았다..)
+ * ## 핵심 내용 ##
+ * - BFS 문제이다. 이전 거리 값을 누적하면서 거리 계산 But, 비가중치
+ */
+
+import java.io.BufferedReader;
+import java.io.OutputStreamWriter;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
 import java.util.*;
 
+
 public class Main {
-    public static void main(String[] args) throws IOException {
+
+    static int N, M, K, X;
+    static ArrayList<Integer> arr[];
+    static Queue<Integer> q = new LinkedList<>();
+    static int[] distance;
+
+    public static void main(String args[]) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st;
 
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
-        int X = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
+        X = Integer.parseInt(st.nextToken());
 
-        List<List<Integer>> graph = new ArrayList<>();
-        for (int i = 0; i < N + 1; i++) {
-            graph.add(new ArrayList<>());
-        }
 
-        for (int i = 0; i < M; i++) {
-            st = new StringTokenizer(br.readLine());
-            int u = Integer.parseInt(st.nextToken());
-            int v = Integer.parseInt(st.nextToken());
-            graph.get(u).add(v); // 단방향 간선
-        }
-
-        int[] distance = new int[N + 1];
+        arr = new ArrayList[N+1];
+        distance = new int[N+1];
         Arrays.fill(distance, -1);
         distance[X] = 0;
 
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(X);
-
-        while (!queue.isEmpty()) {
-            int current = queue.poll();
-            for (int next : graph.get(current)) {
-                if (distance[next] == -1) { // 방문한 노드와 방문하지 않는 노드를 체크하는 용도로 사용
-                    distance[next] = distance[current] + 1; // 전 노드까지의 거리 + 1
-                    queue.add(next);
-                }
-            }
+        for (int i = 1; i <= N; i++) {
+            arr[i] = new ArrayList<>();
         }
+
+        for (int i = 0; i <M; i++) {
+            st = new StringTokenizer(br.readLine());
+
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
+
+            arr[start].add(end);
+        }
+
+
+        q.offer(X);
+        bfs();
 
         boolean found = false;
         for (int i = 1; i <= N; i++) {
-            if (distance[i] == K) { // 거리가 K인것만 출력
-                System.out.println(i);
+            if (distance[i] == K) {
+                bw.write(i + "\n");
                 found = true;
             }
         }
 
-        if (!found) {
-            System.out.println(-1);
+        if(!found) {
+            bw.write(-1 + "\n");
         }
+
+        bw.flush();
+        bw.close();
+        br.close();
+
     }
-}
+
+    private static void bfs() {
+        int curNode;
+
+        while (!q.isEmpty()) {
+            curNode = q.poll();
+
+            for (int nextNode : arr[curNode]) {
+                if (distance[nextNode] == -1) {
+                    q.offer(nextNode);
+                    distance[nextNode]  = distance[curNode] + 1;
+                }
+            }
+        }
