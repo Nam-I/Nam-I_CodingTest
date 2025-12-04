@@ -37,19 +37,19 @@ public class Main {
         }
 
         for (int i = 0; i < A; i++) {
-            dp[i] = 1;
+            dp[i] = 1; // 처음 dp 값 등록 시 1 할당
 
-            for (int j = 0; j < i; j++) {
-                if (arr[j] < arr [i] && dp[i] < dp[j]+1) {
-                    dp[i] = dp[j] + 1;
+            for (int j = 0; j < i; j++) { // 이전 인덱스 순회
+                if (arr[j] < arr [i] && dp[i] < dp[j]+1) { // 이전 배열 값이 현재 배열 값 보다 작으면서 이전 dp 값 + 1 이 현재 인덱스 dp 값보다 크면
+                    dp[i] = dp[j] + 1; // 현재 dp 값을 이전 dp 값 + 1 로 교체
                 }
             }
         }
 
         for (int i = 1; i < A; i++) {
-            max = max < dp[i] ? dp[i] : max;
+            max = max < dp[i] ? dp[i] : max; // 가장 큰 값 max 변수에 할당. Math.max 모듈 사용보다 삼항 연산자 쓰는게 더 빠르다.
         }
-        
+
         bw.write(max + "\n");
         bw.flush();
         bw.close();
