@@ -8,24 +8,40 @@
  * - Compartor, comparingInt, thenComparingInt 구현 기억하기
  * - list.sort(Comparator) 형태 기억하기
  * - 람다 표현식 사용법 잘 알아두기
+ * - 우선순위큐로 구현 가능: 삽입/삭제 시 그냥 큐는 compareTo()를 호출하지 않음
  **/
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.BufferedWriter;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.PriorityQueue;
+
+class Meeting implements Comparable<Meeting> {
+    int start, end;
+
+    public Meeting(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
+    @Override
+    public int compareTo(Meeting o) { // offer()/poll() 시 자동으로 정렬 실행
+        int result = Integer.compare(this.end, o.end); // 빼기 방식(this.end - o.end)는 드물게 오버플로우가 발생할 수 있다고 해서 이 방식 채택
+
+        if (result != 0) return result;
+        else return Integer.compare(this.start, o.start);
+    }
+}
 
 public class Main {
-    static int N;
-    static ArrayList<int[]> meetings = new ArrayList<>();
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
-        N = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
+
+        PriorityQueue<Meeting> pq = new PriorityQueue<>();
 
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
@@ -33,26 +49,23 @@ public class Main {
             int start = Integer.parseInt(st.nextToken());
             int end = Integer.parseInt(st.nextToken());
 
-            meetings.add(new int[]{start, end});
+            pq.offer(new Meeting(start, end));
         }
 
-        meetings.sort( // 명시적 박싱 회피, 람다
-                Comparator.comparingInt((int[] x) -> x[1]) // 종료 시간 기준 오름차순 정렬
-                        .thenComparingInt(x -> x[0]) // 종료 시간이 동일할 경우 시작 시간 기준 오름차순 정렬
-        );
+        int prevEndTime = pq.poll().end; // 회의는 무조건 한개 이상이고 정렬된 가장 앞 순서 회의는 반드시 추가됨
+        int count = 1; // 회의 일정 추가
+        while(!pq.isEmpty()) {
+            Meeting m = pq.poll();
 
-        int count = 0;
-        int currentEndTime = -1;
-
-        for (int[] meeting : meetings) { // 차례로 배열 순회
-            if (currentEndTime <= meeting[0]) { // 현재 회의 종료 시간 보다 시작 시간이 뒤인 경우
-                ++count; // 해당 회의 일정 추가
-                currentEndTime = meeting[1]; // 현재 종료 시간 업데이트
+            if (prevEndTime <= m.start) { // 이전 회의의 끝나는 시간이 현재 회의의 시작 시간 보다 뒤이거나 같으면(끝남과 동시에 시작 가능)
+                ++count; // 회의 일정 추가
+                prevEndTime = m.end; // 현재 회의의 종료 시간으로 교체
             }
         }
 
         bw.write(count + "\n");
         bw.flush();
+        bw.close();
         br.close();
     }
 }
