@@ -1,3 +1,4 @@
+/**백준 3055.G5.탈출 - java 풀이 **/
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -84,4 +85,5 @@ public class Main {
     private static boolean validation(int moveY, int moveX) {
         return !(0 <= moveY && moveY < r && 0 <= moveX && moveX < c);
     }
+
 }
