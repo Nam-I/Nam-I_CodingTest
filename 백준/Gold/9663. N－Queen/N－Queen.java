@@ -1,4 +1,4 @@
-/** 백준 9663.G4.N-Queen - 백트래킹, O(N) java 풀이
+/** 백준 9663.G4.N-Queen - 백트래킹, O(1) java 풀이
  * ## 체감 난이도 ##
  * - 체스를 아예 모르기도 했고 내가 항상 겪는 문제인데 완전 탐색 문제일 때
  * 진짜로 모든 경우의 수를 다 확인하는게 맞나? 하는 의문이 들어서 맞는 방향인데도 자꾸 틀린 방향이라고 생각하는 문제가 있었다.
@@ -20,14 +20,19 @@ import java.io.OutputStreamWriter;
 
 public class Main {
     static int N;
-    static int[] board;
+    static boolean[] usedCol;
+    static boolean[] usedRightLeft;
+    static boolean[] usedLeftRight;
     static int result = 0;
     public static void main(String args[]) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         N = Integer.parseInt(br.readLine());
-        board = new int[N];
+        usedCol = new boolean[N]; // 해당 열 말 놓을 수 있는 여부 저장
+        usedRightLeft = new boolean[2 * N -1]; // 우->좌 대각선 말 놓을 수 있는지 저장
+        usedLeftRight = new boolean[2 * N -1]; // 좌-> 대각선 말 놓을 수 있는지 저장
+
 
         backtracking(0);
 
@@ -38,6 +43,7 @@ public class Main {
 
     }
 
+
     private static void backtracking(int row) {
         if (row == N) {
             result++;
@@ -45,23 +51,22 @@ public class Main {
         }
 
         for (int col = 0; col < N; col++) {
-            board[row] = col;
+            int rightLeft = row + col; // 우->좌 대각선 같은 라인에 있는 좌표일 경우 결과 일치
+            int leftRight = row - col + (N - 1); // 좌->우 대각선 같은 라인에 있는 좌표일 경우 결과 일치. 음수 방지를 위해 (N-1) 더함.
 
-            if (possible(row)) {
-                backtracking(row + 1);
-            }
+            if (usedCol[col] || usedRightLeft[rightLeft] || usedLeftRight[leftRight]) continue;
+
+            usedCol[col] = true;
+            usedRightLeft[rightLeft] = true;
+            usedLeftRight[leftRight] = true;
+
+            backtracking(row + 1);
+
+            usedCol[col] = false;
+            usedRightLeft[rightLeft] = false;
+            usedLeftRight[leftRight] = false;
         }
 
     }
 
-    private static boolean possible(int curRow) {
-        for (int r = 0; r < curRow; r++) {
-            if (board[curRow] == board[r]) return false;
-            else if (Math.abs(curRow - r) == Math.abs(board[curRow] - board[r])) {
-                return false;
-            }
-        }
-
-        return true;
-    }
  }
