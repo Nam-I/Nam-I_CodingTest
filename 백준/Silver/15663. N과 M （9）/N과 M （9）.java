@@ -57,7 +57,7 @@ public class Main {
             return;
         }
 
-        int prev = Integer.MAX_VALUE;
+        int prev = Integer.MIN_VALUE;
 
         for (int i = 0; i < N; i++) {
             if (visited[i] || prev == arr[i]) continue;
